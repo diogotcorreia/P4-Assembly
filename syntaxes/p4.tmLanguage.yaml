@@ -25,7 +25,7 @@ repository:
         match: '(\b|-)[0-7]+o\b'
       # decimal
       - name: constant.numeric.decimal.p4
-        match: '(\b|-)[0-9]+\b'
+        match: '(\b|-)[0-9]+d?\b'
       # hex
       - name: constant.numeric.hex.p4
         match: '(\b|-)[0-9A-Fa-f]{1,4}h\b'
@@ -107,22 +107,22 @@ repository:
   mnemonics:
     patterns:
       - name: keyword.operator.word.mnemonic.general-purpose.data-transfer
-        match: '(?i)\b(mov|mvb(h|l)|xch|push|pop)\b'
+        match: '(?i)\b(mov|mvi(h|l)?|load|stor)\b'
       - name: keyword.operator.word.mnemonic.general-purpose.binary-arithmetic
-        match: '(?i)\b(addc?|subb?|mul|div|inc|dec|neg|cmp)\b'
+        match: '(?i)\b(addc?|subb?|inc|dec|neg|cmp)\b'
       - name: keyword.operator.word.mnemonic.general-purpose.logical
         match: '(?i)\b(and|x?or|com|test)\b'
       - name: keyword.operator.word.mnemonic.general-purpose.rotate
         match: '(?i)\b(sh[rl]a?|ro[rl]c?)\b'
       - name: keyword.operator.word.mnemonic.general-purpose.other
-        match: '(?i)\b(nop|eni|dsi|stc|clc|cmc)\b'
-      - match: '(?i)\b((br|jmp)(\.n?[zcnopi])?)(\s+)(\w+)\b'
+        match: '(?i)\b(nop|eni|dsi|stc|clc|cmc|orig)\b'
+      - match: '(?i)\b((br|jmp)(\.n?[zcnopi])?)(\s+)(\.?\w+)\b'
         captures:
           "1": { name: keyword.control.mnemonic.jmp }
           "5": { name: entity.name.function.p4 }
-      - match: '(?i)\b((call)(\.n?[zcnopi])?)(\s+)(\w+)\b'
+      - match: '(?i)\b((jal)(\.n?[zcnopi])?)(\s+)(\.?\w+)\b'
         captures:
-          "1": { name: keyword.control.mnemonic.call }
+          "1": { name: keyword.control.mnemonic.jal }
           "5": { name: entity.name.function.p4 }
       - name: keyword.control.mnemonic.other
         match: '(?i)\b(retn?|rti|int)\b'

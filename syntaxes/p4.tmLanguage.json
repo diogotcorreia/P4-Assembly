@@ -41,7 +41,7 @@
         },
         {
           "name": "constant.numeric.decimal.p4",
-          "match": "(\\b|-)[0-9]+\\b"
+          "match": "(\\b|-)[0-9]+d?\\b"
         },
         {
           "name": "constant.numeric.hex.p4",
@@ -202,11 +202,11 @@
       "patterns": [
         {
           "name": "keyword.operator.word.mnemonic.general-purpose.data-transfer",
-          "match": "(?i)\\b(mov|mvb(h|l)|xch|push|pop)\\b"
+          "match": "(?i)\\b(mov|mvi(h|l)?|load|stor)\\b"
         },
         {
           "name": "keyword.operator.word.mnemonic.general-purpose.binary-arithmetic",
-          "match": "(?i)\\b(addc?|subb?|mul|div|inc|dec|neg|cmp)\\b"
+          "match": "(?i)\\b(addc?|subb?|inc|dec|neg|cmp)\\b"
         },
         {
           "name": "keyword.operator.word.mnemonic.general-purpose.logical",
@@ -218,10 +218,10 @@
         },
         {
           "name": "keyword.operator.word.mnemonic.general-purpose.other",
-          "match": "(?i)\\b(nop|eni|dsi|stc|clc|cmc)\\b"
+          "match": "(?i)\\b(nop|eni|dsi|stc|clc|cmc|orig)\\b"
         },
         {
-          "match": "(?i)\\b((br|jmp)(\\.n?[zcnopi])?)(\\s+)(\\w+)\\b",
+          "match": "(?i)\\b((br|jmp)(\\.n?[zcnopi])?)(\\s+)(.?\\w+)\\b",
           "captures": {
             "1": {
               "name": "keyword.control.mnemonic.jmp"
@@ -232,10 +232,10 @@
           }
         },
         {
-          "match": "(?i)\\b((call)(\\.n?[zcnopi])?)(\\s+)(\\w+)\\b",
+          "match": "(?i)\\b((jal)(\\.n?[zcnopi])?)(\\s+)(\\w+)\\b",
           "captures": {
             "1": {
-              "name": "keyword.control.mnemonic.call"
+              "name": "keyword.control.mnemonic.jal"
             },
             "5": {
               "name": "entity.name.function.p4"

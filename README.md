@@ -15,6 +15,8 @@ VS Code addon providing language support for the P4 Assembly programming languag
 
 ## Features
 
+**The images below are from the P3 Assembly extension. The simulator integration looks different.**
+
 - Syntax highlighting (different themes will render different colors): recognizes all of P4's instruction mnemonics, labels and addressing modes;
 - Hover documentation: put your mouse over an instruction or register to see its documentation and usage
 - Constant convertion: put your mouse over a constant to see its binary, hex, decimal and ascii values.
