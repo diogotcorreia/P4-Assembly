@@ -7,6 +7,12 @@ VS Code addon providing language support for the P4 Assembly programming languag
 - The content in the simulator only changes when you save the original file.
 - You must use the simulator in split screen with the editor file, otherwise the code won't sync.
 
+## Instructions
+
+1. Download P4 (v1.0.8) from the [simulator website](http://p4.rnl.tecnico.ulisboa.pt/dist/)
+2. Open a `.as` file, right click on the editor and select the "Assemble & Run Simulator" option (or press CTRL+SHIFT+R)
+3. Move the window to split screen (see known issues)
+
 ## Features
 
 - Syntax highlighting (different themes will render different colors): recognizes all of P4's instruction mnemonics, labels and addressing modes;
