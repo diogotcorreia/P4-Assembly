@@ -6,19 +6,19 @@ import * as fs from 'fs';
 const GLOBAL_STATE_NAME = 'p4-simulator';
 
 export class P4Simulator {
-    globalState: vscode.Memento;
+    context: vscode.ExtensionContext;
     outputChannel: vscode.OutputChannel;
     execPath: string | undefined;
 
     static asFilePath: string | undefined;
 
     constructor(
-        globalState: vscode.Memento,
+        context: vscode.ExtensionContext,
         outputChannel: vscode.OutputChannel) {
 
-        this.globalState = globalState;
+        this.context = context;
         this.outputChannel = outputChannel;
-        this.setExecPath(this.globalState.get(GLOBAL_STATE_NAME));
+        this.setExecPath(this.context.globalState.get(GLOBAL_STATE_NAME));
     }
 
     private noPathDefinedMsg(): string {
@@ -36,7 +36,7 @@ export class P4Simulator {
     private setExecPath(pathToWrite: string | undefined): void {
         this.execPath = pathToWrite;
         if(pathToWrite) {
-            this.globalState.update(GLOBAL_STATE_NAME, pathToWrite);
+            this.context.globalState.update(GLOBAL_STATE_NAME, pathToWrite);
             fs.chmod(pathToWrite, 0o775, (err) => {
                 if (err) throw err;
             });
@@ -110,7 +110,8 @@ export class P4Simulator {
                         {
                             // Enable scripts in the webview
                             enableScripts: true,
-                            localResourceRoots: [vscode.Uri.file(path.join(this.execPath))]
+                            localResourceRoots: [vscode.Uri.file(path.join(this.context.extensionPath)), 
+                                vscode.Uri.file(path.join(this.execPath))]
                         }
                     );
 
@@ -120,26 +121,37 @@ export class P4Simulator {
                             const assetSrc = panel.webview.asWebviewUri(uri);
                             html = html.replace(asset, assetSrc.toString());
                         });
-                      
-                        panel.webview.html = html;});
 
-
-                    /*let execParams = this.buildCall(this.execPath, path.parse(activeFile).name);
-
-                    child_process.execFile(execParams[0], execParams.slice(1), { cwd: path.dirname(activeFile) }, (error, stdout) => {
-                        if (!this.outputCb) 
-                            resolve();
-                        else 
-                        if (error) {
-                            this.outputCb(error.message);
-                            reject();
-                        }
-                        else {
-                            this.outputCb(stdout);
-                            resolve();
-                        }
+                        const bridgePath = vscode.Uri.file(
+                            path.join(this.context.extensionPath, 'src', 'sim-bridge.js')
+                        );
+                        const bridgeSrc = panel.webview.asWebviewUri(bridgePath);
                         
-                    });*/
+                        const stylePath = vscode.Uri.file(
+                            path.join(this.context.extensionPath, 'src', 'sim.css')
+                        );
+                        const styleSrc = panel.webview.asWebviewUri(stylePath);
+
+                        html = html.replace('</head>', `<link rel="stylesheet" href="${styleSrc}"><script src="${bridgeSrc}" defer></script></head>`);
+                      
+                        panel.webview.html = html;
+                    });
+
+                    const unregisterEvent = vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
+                        if (document.languageId === 'p4' && document.uri.scheme === 'file') 
+                            panel.webview.postMessage({ command: 'update-code', content: document.getText() });
+                        
+                    });
+
+                    panel.onDidDispose(
+                        () => {
+                        // When the panel is closed, cancel any future updates to the webview content
+                            unregisterEvent.dispose();
+                        },
+                        null,
+                        this.context.subscriptions
+                    );
+
                 } else 
                     reject();
                 

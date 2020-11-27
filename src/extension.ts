@@ -19,7 +19,7 @@ export async function activate(context: vscode.ExtensionContext) {
     //assemble and simulate commands
     let outputChannel = vscode.window.createOutputChannel('P4');
 
-    let simulator = new P4Simulator(context.globalState, outputChannel);
+    let simulator = new P4Simulator(context, outputChannel);
 
     context.subscriptions.push(vscode.commands.registerCommand('extension.setSimulator', () => simulator.select()));
 

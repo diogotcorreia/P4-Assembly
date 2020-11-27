@@ -1,0 +1,17 @@
+#bodyContainer {
+  display: none;
+}
+
+body {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+#simulatorHeader {
+  background-color: #ddd;
+  box-shadow: none;
+}
+
+#simTerminal {
+  background-color: #fff;
+  color: #000;
+}
