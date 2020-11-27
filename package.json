@@ -2,7 +2,7 @@
   "name": "p4-assembly",
   "displayName": "P4 Assembly",
   "description": "VS Code language support for the P4 Assembly programming language, the language used in the fictitious processor P4, created at IST for educational purposes.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "engines": {
     "vscode": "^1.43.0"

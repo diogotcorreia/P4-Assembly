@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.0.3
+
+- Add memory visibility toggle
+
 ## 1.0.2
 
 - Improve P4 Simulator dark mode
