@@ -152,6 +152,13 @@ export class P4Simulator {
                         this.context.subscriptions
                     );
 
+                    panel.onDidChangeViewState((event : vscode.WebviewPanelOnDidChangeViewStateEvent) => {
+                        const activeEditor = vscode.window.activeTextEditor;
+                        if (activeEditor) 
+                            event.webviewPanel.webview.postMessage({ command: 'update-code', content: activeEditor.document.getText() });
+                        
+                    },null, this.context.subscriptions);
+
                 } else 
                     reject();
                 
