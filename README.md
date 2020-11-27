@@ -2,6 +2,11 @@
 
 VS Code addon providing language support for the P4 Assembly programming language, the language used in the fictitious [P4 processor](http://p4.rnl.tecnico.ulisboa.pt/), created at IST (Instituto Superior Técnico) for educational purposes.
 
+## Known issues
+
+- The content in the simulator only changes when you save the original file.
+- You must use the simulator in split screen with the editor file, otherwise the code won't sync.
+
 ## Features
 
 - Syntax highlighting (different themes will render different colors): recognizes all of P4's instruction mnemonics, labels and addressing modes;
