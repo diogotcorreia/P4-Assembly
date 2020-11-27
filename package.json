@@ -65,18 +65,8 @@
     ],
     "commands": [
       {
-        "command": "extension.setAssembler",
-        "title": "Selecionar Assembler",
-        "category": "P4"
-      },
-      {
         "command": "extension.setSimulator",
         "title": "Selecionar Simulador",
-        "category": "P4"
-      },
-      {
-        "command": "extension.runAssembler",
-        "title": "Assemblar ficheiro atual",
         "category": "P4"
       },
       {
@@ -87,11 +77,6 @@
     ],
     "menus": {
       "editor/context": [
-        {
-          "command": "extension.runAssembler",
-          "group": "P4@1",
-          "when": "editorTextFocus && editorLangId == p4"
-        },
         {
           "command": "extension.runAssembler&Simulator",
           "group": "P4@2",

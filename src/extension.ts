@@ -1,10 +1,10 @@
+import { P4Simulator } from './webview';
 import * as vscode from 'vscode';
 import {P3HoverProvider} from './hover';
 import {P3DocumentationManager} from './documentation';
 import * as path from 'path';
 import { P3DefinitionProvider } from './definition';
 import { P3SymbolProvider } from './symbols';
-import { P3Executable } from './executables';
 
 export async function activate(context: vscode.ExtensionContext) {
     state.setExtensionPath(context.extensionPath);
@@ -19,28 +19,11 @@ export async function activate(context: vscode.ExtensionContext) {
     //assemble and simulate commands
     let outputChannel = vscode.window.createOutputChannel('P4');
 
-    let assembler = new P3Executable('Assembler', context.globalState, outputChannel, (execPath: string, openFileBaseName: string) => {
-        return [execPath, openFileBaseName + '.as'];
-    }, output => {
-        outputChannel.clear();
-        outputChannel.append(output);
-        outputChannel.show();
-    });
+    let simulator = new P4Simulator(context.globalState, outputChannel);
 
-    let simulator = new P3Executable('Simulador', context.globalState, outputChannel, (execPath: string, openFileBaseName: string) => {
-        return ['java', '-jar', execPath, openFileBaseName + '.exe'];
-    });
-
-    context.subscriptions.push(vscode.commands.registerCommand('extension.setAssembler', () => assembler.select()));
     context.subscriptions.push(vscode.commands.registerCommand('extension.setSimulator', () => simulator.select()));
 
-    context.subscriptions.push(vscode.commands.registerCommand('extension.runAssembler', () => {
-        assembler.run();
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand('extension.runAssembler&Simulator', () => {
-        assembler.run().then(() => simulator.run());
-    }));
+    context.subscriptions.push(vscode.commands.registerCommand('extension.runAssembler&Simulator', () => simulator.run()));
 }
 
 export function deactivate() {}
