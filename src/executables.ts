@@ -33,7 +33,7 @@ export class P3Executable {
     }
 
     private requestPathSelectionMsg(): string {
-        return 'Selecionar ' + this.name + ' P3';
+        return 'Selecionar ' + this.name + ' P4';
     }
 
     private selectedPathMsg(): string {

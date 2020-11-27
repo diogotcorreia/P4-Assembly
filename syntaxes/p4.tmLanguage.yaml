@@ -1,0 +1,128 @@
+# [PackageDev] target_format: plist, ext: tmLanguage
+name: P4 Assembly
+scopeName: source.p4
+fileTypes: as
+
+patterns:
+  - include: "#registers"
+  - include: "#mnemonics"
+  - include: "#constants"
+  - include: "#entities"
+  - include: "#support"
+  - include: "#comments"
+  - include: "#preprocessor"
+  - include: "#strings"
+
+repository:
+  constants:
+    patterns:
+      # floating-point
+      # binary
+      - name: constant.numeric.binary.p4
+        match: '(\b|-)[01]+b\b'
+      # octal
+      - name: constant.numeric.octal.p4
+        match: '(\b|-)[0-7]+o\b'
+      # decimal
+      - name: constant.numeric.decimal.p4
+        match: '(\b|-)[0-9]+\b'
+      # hex
+      - name: constant.numeric.hex.p4
+        match: '(\b|-)[0-9A-Fa-f]{1,4}h\b'
+
+  entities:
+    patterns:
+      #labels
+      - match: '(\.\.@)((?:[[:alpha:]_?](?:[[:alnum:]_$#@~.?]*)))(?:(\:)?|\b)'
+        name: entity.name.function.p4
+        captures:
+          "1": { name: punctuation.separator.p4 storage.modifier.p4 }
+          "2": { name: entity.name.function.special.p4 }
+          "3": { name: punctuation.separator.p4 }
+      - match: '(?:(\.)?|\b)((?:[[:alpha:]_?](?:[[:alnum:]_$#@~.?]*)))(?:(\:))'
+        name: entity.name.function.p4
+        captures:
+          "1": { name: punctuation.separator.p4 storage.modifier.p4 }
+          "2": { name: entity.name.function.p4 }
+          "3": { name: punctuation.separator.p4 }
+      - match: '(\.)([0-9]+(?:[[:alnum:]_$#@~.?]*))(?:(\:)?|\b)'
+        name: entity.name.function.p4
+        captures:
+          "1": { name: punctuation.separator.p4 storage.modifier.p4 }
+          "2": { name: entity.name.function.p4 }
+          "3": { name: punctuation.separator.p4 }
+      - match: '(?:(\.)?|\b)([0-9$@~](?:[[:alnum:]_$#@~.?]*))(?:(\:))'
+        name: invalid.illegal.entity.name.function.p4
+        captures:
+          "1": { name: punctuation.separator.p4 storage.modifier.p4 }
+          "2": { name: invalid.illegal.entity.name.function.p4 }
+          "3": { name: punctuation.separator.p4 }
+
+  support:
+    patterns:
+      - name: storage.type.p4
+        match: '(?i)\b(tab|str|word)\b'
+      - begin: '(M\[)'
+        beginCaptures:
+          "0": { name: storage.modifier.memory-address.p4 }
+        patterns:
+          - match: '\+'
+            name: "storage.modifier.indexed.p4"
+          - include: "#constants"
+          - include: "#registers"
+        end: '(\])'
+        endCaptures:
+          "0": { name: storage.modifier.memory-address.p4 }
+
+  comments:
+    patterns:
+      - name: comment.line
+        match: ;.*$
+
+  preprocessor:
+    patterns:
+      - name: meta.preprocessor.orig
+        match: (?i)\b(orig)\b
+
+      - name: meta.preprocessor.equ
+        match: (?i)\b(equ)\b
+
+  strings:
+    patterns:
+      - name: string.quoted.single.p4
+        begin: "'"
+        beginCaptures:
+          "0": { name: punctuation.definition.string.begin.p4 }
+        end: "'"
+        endCaptures:
+          "0": { name: punctuation.definition.string.end.p4 }
+
+  registers:
+    patterns:
+      - name: constant.language.register.general-purpose.p4
+        match: '(?i)\bR([0-7]|1[1-5])\b'
+      - name: constant.language.register.special.p4
+        match: '(?i)\b(PC|SP|RE)\b'
+
+  mnemonics:
+    patterns:
+      - name: keyword.operator.word.mnemonic.general-purpose.data-transfer
+        match: '(?i)\b(mov|mvb(h|l)|xch|push|pop)\b'
+      - name: keyword.operator.word.mnemonic.general-purpose.binary-arithmetic
+        match: '(?i)\b(addc?|subb?|mul|div|inc|dec|neg|cmp)\b'
+      - name: keyword.operator.word.mnemonic.general-purpose.logical
+        match: '(?i)\b(and|x?or|com|test)\b'
+      - name: keyword.operator.word.mnemonic.general-purpose.rotate
+        match: '(?i)\b(sh[rl]a?|ro[rl]c?)\b'
+      - name: keyword.operator.word.mnemonic.general-purpose.other
+        match: '(?i)\b(nop|eni|dsi|stc|clc|cmc)\b'
+      - match: '(?i)\b((br|jmp)(\.n?[zcnopi])?)(\s+)(\w+)\b'
+        captures:
+          "1": { name: keyword.control.mnemonic.jmp }
+          "5": { name: entity.name.function.p4 }
+      - match: '(?i)\b((call)(\.n?[zcnopi])?)(\s+)(\w+)\b'
+        captures:
+          "1": { name: keyword.control.mnemonic.call }
+          "5": { name: entity.name.function.p4 }
+      - name: keyword.control.mnemonic.other
+        match: '(?i)\b(retn?|rti|int)\b'

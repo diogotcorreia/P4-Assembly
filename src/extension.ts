@@ -10,14 +10,14 @@ export async function activate(context: vscode.ExtensionContext) {
     state.setExtensionPath(context.extensionPath);
 
     await state.getDocumentationManager().then((docManager) => {
-        context.subscriptions.push(vscode.languages.registerHoverProvider('p3', new P3HoverProvider(docManager)));
-        context.subscriptions.push(vscode.languages.registerDefinitionProvider('p3', new P3DefinitionProvider(docManager)));
+        context.subscriptions.push(vscode.languages.registerHoverProvider('p4', new P3HoverProvider(docManager)));
+        context.subscriptions.push(vscode.languages.registerDefinitionProvider('p4', new P3DefinitionProvider(docManager)));
     });
 
-    context.subscriptions.push(vscode.languages.registerDocumentSymbolProvider('p3', new P3SymbolProvider()));
+    context.subscriptions.push(vscode.languages.registerDocumentSymbolProvider('p4', new P3SymbolProvider()));
 
     //assemble and simulate commands
-    let outputChannel = vscode.window.createOutputChannel('P3');
+    let outputChannel = vscode.window.createOutputChannel('P4');
 
     let assembler = new P3Executable('Assembler', context.globalState, outputChannel, (execPath: string, openFileBaseName: string) => {
         return [execPath, openFileBaseName + '.as'];

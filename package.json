@@ -1,127 +1,130 @@
 {
-    "name": "p3-assembly",
-    "displayName": "P3 Assembly",
-    "description": "VS Code language support for the P3 Assembly programming language, the language used in the fictitious processor P3, created at IST for educational purposes.",
-    "version": "1.2.2",
-    "license": "MIT",
-    "engines": {
-        "vscode": "^1.43.0"
+  "name": "p4-assembly",
+  "displayName": "P4 Assembly",
+  "description": "VS Code language support for the P4 Assembly programming language, the language used in the fictitious processor P4, created at IST for educational purposes.",
+  "version": "1.2.2",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.43.0"
+  },
+  "keywords": [
+    "p4",
+    "assembly",
+    "processor",
+    "ist",
+    "acomp"
+  ],
+  "icon": "media/logo.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/diogotcorreia/P4-Assembly.git"
+  },
+  "publisher": "diogotcorreia",
+  "categories": [
+    "Programming Languages"
+  ],
+  "author": {
+    "name": "Diogo Correia"
+  },
+  "contributors": [
+    {
+      "name": "José Afonso Neves"
     },
-    "keywords": [
-        "p3",
-        "assembly",
-        "processor",
-        "ist",
-        "acomp"
-    ],
-    "icon": "media/logo.png",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/guipenedo/P3-Assembly.git"
-    },
-    "publisher": "guipenedo",
-    "categories": [
-        "Programming Languages"
-    ],
-    "author": {
-        "name": "Guilherme Penedo"
-    },
-    "contributors": [
-        {
-            "name": "José Afonso Neves"
-        }
-    ],
-    "activationEvents": [
-        "onLanguage:p3",
-        "onCommand:extension.setAssembler",
-        "onCommand:extension.setSimulator",
-        "onCommand:extension.runAssembler",
-        "onCommand:extension.runAssembler&Simulator"
-    ],
-    "main": "./out/extension.js",
-    "contributes": {
-        "languages": [
-            {
-                "id": "p3",
-                "aliases": [
-                    "P3 Assembly",
-                    "p3as"
-                ],
-                "extensions": [
-                    ".as"
-                ],
-                "configuration": "./language-configuration.json"
-            }
-        ],
-        "grammars": [
-            {
-                "language": "p3",
-                "scopeName": "source.p3",
-                "path": "./syntaxes/p3.tmLanguage.json"
-            }
-        ],
-        "commands": [
-            {
-                "command": "extension.setAssembler",
-                "title": "Selecionar Assembler",
-                "category": "P3"
-            },
-            {
-                "command": "extension.setSimulator",
-                "title": "Selecionar Simulador",
-                "category": "P3"
-            },
-            {
-                "command": "extension.runAssembler",
-                "title": "Assemblar ficheiro atual",
-                "category": "P3"
-            },
-            {
-                "command": "extension.runAssembler&Simulator",
-                "title": "Assemblar e simular ficheiro atual",
-                "category": "P3"
-            }
-        ],
-        "menus": {
-            "editor/context": [
-                {
-                    "command": "extension.runAssembler",
-                    "group": "P3@1",
-                    "when": "editorTextFocus && editorLangId == p3"
-                },
-                {
-                    "command": "extension.runAssembler&Simulator",
-                    "group": "P3@2",
-                    "when": "editorTextFocus && editorLangId == p3"
-                }
-            ]
-        },
-        "keybindings": [
-            {
-                "command": "extension.runAssembler&Simulator",
-                "key": "ctrl+shift+R",
-                "mac": "cmd+shift+R",
-                "when": "editorTextFocus && editorLangId == p3"
-            }
-        ]
-    },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "lint": "eslint src --ext ts",
-        "watch": "tsc -watch -p ./",
-        "pretest": "npm run compile && npm run lint",
-        "syntax": "npx js-yaml syntaxes/p3.tmLanguage.yaml > syntaxes/p3.tmLanguage.json"
-    },
-    "devDependencies": {
-        "js-yaml": "^3.13.1",
-        "@types/node": "^8.10.25",
-        "@types/vscode": "^1.34.0",
-        "tslint": "^5.16.0",
-        "typescript": "^3.4.5",
-        "eslint": "^6.8.0",
-        "@typescript-eslint/parser": "^2.18.0",
-        "@typescript-eslint/eslint-plugin": "^2.18.0",
-        "vscode-test": "^1.3.0"
+    {
+      "name": "Guilherme Penedo"
     }
+  ],
+  "activationEvents": [
+    "onLanguage:p4",
+    "onCommand:extension.setAssembler",
+    "onCommand:extension.setSimulator",
+    "onCommand:extension.runAssembler",
+    "onCommand:extension.runAssembler&Simulator"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "p4",
+        "aliases": [
+          "P4 Assembly",
+          "p4as"
+        ],
+        "extensions": [
+          ".as"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "p4",
+        "scopeName": "source.p4",
+        "path": "./syntaxes/p4.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "extension.setAssembler",
+        "title": "Selecionar Assembler",
+        "category": "P4"
+      },
+      {
+        "command": "extension.setSimulator",
+        "title": "Selecionar Simulador",
+        "category": "P4"
+      },
+      {
+        "command": "extension.runAssembler",
+        "title": "Assemblar ficheiro atual",
+        "category": "P4"
+      },
+      {
+        "command": "extension.runAssembler&Simulator",
+        "title": "Assemblar e simular ficheiro atual",
+        "category": "P4"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "extension.runAssembler",
+          "group": "P4@1",
+          "when": "editorTextFocus && editorLangId == p4"
+        },
+        {
+          "command": "extension.runAssembler&Simulator",
+          "group": "P4@2",
+          "when": "editorTextFocus && editorLangId == p4"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "extension.runAssembler&Simulator",
+        "key": "ctrl+shift+R",
+        "mac": "cmd+shift+R",
+        "when": "editorTextFocus && editorLangId == p4"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "lint": "eslint src --ext ts",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "syntax": "npx js-yaml syntaxes/p4.tmLanguage.yaml > syntaxes/p4.tmLanguage.json"
+  },
+  "devDependencies": {
+    "js-yaml": "^3.13.1",
+    "@types/node": "^8.10.25",
+    "@types/vscode": "^1.34.0",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5",
+    "eslint": "^6.8.0",
+    "@typescript-eslint/parser": "^2.18.0",
+    "@typescript-eslint/eslint-plugin": "^2.18.0",
+    "vscode-test": "^1.3.0"
+  }
 }

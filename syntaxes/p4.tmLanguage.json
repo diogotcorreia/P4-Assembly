@@ -1,6 +1,6 @@
 {
-  "name": "P3 Assembly",
-  "scopeName": "source.p3",
+  "name": "P4 Assembly",
+  "scopeName": "source.p4",
   "fileTypes": "as",
   "patterns": [
     {
@@ -32,19 +32,19 @@
     "constants": {
       "patterns": [
         {
-          "name": "constant.numeric.binary.p3",
+          "name": "constant.numeric.binary.p4",
           "match": "(\\b|-)[01]+b\\b"
         },
         {
-          "name": "constant.numeric.octal.p3",
+          "name": "constant.numeric.octal.p4",
           "match": "(\\b|-)[0-7]+o\\b"
         },
         {
-          "name": "constant.numeric.decimal.p3",
+          "name": "constant.numeric.decimal.p4",
           "match": "(\\b|-)[0-9]+\\b"
         },
         {
-          "name": "constant.numeric.hex.p3",
+          "name": "constant.numeric.hex.p4",
           "match": "(\\b|-)[0-9A-Fa-f]{1,4}h\\b"
         }
       ]
@@ -53,61 +53,61 @@
       "patterns": [
         {
           "match": "(\\.\\.@)((?:[[:alpha:]_?](?:[[:alnum:]_$#@~.?]*)))(?:(\\:)?|\\b)",
-          "name": "entity.name.function.p3",
+          "name": "entity.name.function.p4",
           "captures": {
             "1": {
-              "name": "punctuation.separator.p3 storage.modifier.p3"
+              "name": "punctuation.separator.p4 storage.modifier.p4"
             },
             "2": {
-              "name": "entity.name.function.special.p3"
+              "name": "entity.name.function.special.p4"
             },
             "3": {
-              "name": "punctuation.separator.p3"
+              "name": "punctuation.separator.p4"
             }
           }
         },
         {
           "match": "(?:(\\.)?|\\b)((?:[[:alpha:]_?](?:[[:alnum:]_$#@~.?]*)))(?:(\\:))",
-          "name": "entity.name.function.p3",
+          "name": "entity.name.function.p4",
           "captures": {
             "1": {
-              "name": "punctuation.separator.p3 storage.modifier.p3"
+              "name": "punctuation.separator.p4 storage.modifier.p4"
             },
             "2": {
-              "name": "entity.name.function.p3"
+              "name": "entity.name.function.p4"
             },
             "3": {
-              "name": "punctuation.separator.p3"
+              "name": "punctuation.separator.p4"
             }
           }
         },
         {
           "match": "(\\.)([0-9]+(?:[[:alnum:]_$#@~.?]*))(?:(\\:)?|\\b)",
-          "name": "entity.name.function.p3",
+          "name": "entity.name.function.p4",
           "captures": {
             "1": {
-              "name": "punctuation.separator.p3 storage.modifier.p3"
+              "name": "punctuation.separator.p4 storage.modifier.p4"
             },
             "2": {
-              "name": "entity.name.function.p3"
+              "name": "entity.name.function.p4"
             },
             "3": {
-              "name": "punctuation.separator.p3"
+              "name": "punctuation.separator.p4"
             }
           }
         },
         {
           "match": "(?:(\\.)?|\\b)([0-9$@~](?:[[:alnum:]_$#@~.?]*))(?:(\\:))",
-          "name": "invalid.illegal.entity.name.function.p3",
+          "name": "invalid.illegal.entity.name.function.p4",
           "captures": {
             "1": {
-              "name": "punctuation.separator.p3 storage.modifier.p3"
+              "name": "punctuation.separator.p4 storage.modifier.p4"
             },
             "2": {
-              "name": "invalid.illegal.entity.name.function.p3"
+              "name": "invalid.illegal.entity.name.function.p4"
             },
             "3": {
-              "name": "punctuation.separator.p3"
+              "name": "punctuation.separator.p4"
             }
           }
         }
@@ -116,20 +116,20 @@
     "support": {
       "patterns": [
         {
-          "name": "storage.type.p3",
+          "name": "storage.type.p4",
           "match": "(?i)\\b(tab|str|word)\\b"
         },
         {
           "begin": "(M\\[)",
           "beginCaptures": {
             "0": {
-              "name": "storage.modifier.memory-address.p3"
+              "name": "storage.modifier.memory-address.p4"
             }
           },
           "patterns": [
             {
               "match": "\\+",
-              "name": "storage.modifier.indexed.p3"
+              "name": "storage.modifier.indexed.p4"
             },
             {
               "include": "#constants"
@@ -141,7 +141,7 @@
           "end": "(\\])",
           "endCaptures": {
             "0": {
-              "name": "storage.modifier.memory-address.p3"
+              "name": "storage.modifier.memory-address.p4"
             }
           }
         }
@@ -170,17 +170,17 @@
     "strings": {
       "patterns": [
         {
-          "name": "string.quoted.single.p3",
+          "name": "string.quoted.single.p4",
           "begin": "'",
           "beginCaptures": {
             "0": {
-              "name": "punctuation.definition.string.begin.p3"
+              "name": "punctuation.definition.string.begin.p4"
             }
           },
           "end": "'",
           "endCaptures": {
             "0": {
-              "name": "punctuation.definition.string.end.p3"
+              "name": "punctuation.definition.string.end.p4"
             }
           }
         }
@@ -189,11 +189,11 @@
     "registers": {
       "patterns": [
         {
-          "name": "constant.language.register.general-purpose.p3",
+          "name": "constant.language.register.general-purpose.p4",
           "match": "(?i)\\bR([0-7]|1[1-5])\\b"
         },
         {
-          "name": "constant.language.register.special.p3",
+          "name": "constant.language.register.special.p4",
           "match": "(?i)\\b(PC|SP|RE)\\b"
         }
       ]
@@ -227,7 +227,7 @@
               "name": "keyword.control.mnemonic.jmp"
             },
             "5": {
-              "name": "entity.name.function.p3"
+              "name": "entity.name.function.p4"
             }
           }
         },
@@ -238,7 +238,7 @@
               "name": "keyword.control.mnemonic.call"
             },
             "5": {
-              "name": "entity.name.function.p3"
+              "name": "entity.name.function.p4"
             }
           }
         },
