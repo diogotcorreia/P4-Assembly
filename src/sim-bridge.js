@@ -4,14 +4,28 @@ const previousState = vscode.getState();
 if (previousState && previousState.content)
   window.codeMirror.setValue(previousState.content);
 
-const btn = document.createElement("button");
-btn.innerText = "Toggle Memory";
-btn.addEventListener("click", () => {
+
+const btn_togcode = document.createElement("button");
+
+
+btn_togcode.innerText = "Toggle Code";
+btn_togcode.addEventListener("click", () => {
+  const x = document.getElementById("bodyContainer");
+  if (x.style.display === "none") x.style.display = "flex";
+  else x.style.display = "none";
+});
+
+document.getElementById("simButtons").appendChild(btn_togcode);
+
+const btn_togmem = document.createElement("button");
+btn_togmem.innerText = "Toggle Memory";
+btn_togmem.addEventListener("click", () => {
   const x = document.getElementById("simMemory");
   if (x.style.display === "none") x.style.display = "inline-flex";
   else x.style.display = "none";
 });
-document.getElementById("simButtons").appendChild(btn);
+
+document.getElementById("simButtons").appendChild(btn_togmem);
 
 window.addEventListener("message", (event) => {
   const message = event.data; // The JSON data our extension sent
