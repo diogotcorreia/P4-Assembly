@@ -25,6 +25,11 @@ btn_togmem.addEventListener("click", () => {
   else x.style.display = "none";
 });
 
+window.codeMirror.getWrapperElement().classList['remove']('showRulers');
+
+document.getElementById("rulers").checked = false
+
+
 document.getElementById("simButtons").appendChild(btn_togmem);
 
 window.addEventListener("message", (event) => {
