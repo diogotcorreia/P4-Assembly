@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.0.4
+
+- Add code toggle button to be able to see errors and warnings on simulator
+
 ## 1.0.3
 
 - Add memory visibility toggle
