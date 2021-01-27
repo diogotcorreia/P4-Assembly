@@ -1,3 +1,4 @@
+import { P4DiagnosticsProvider } from './diagnostics';
 import { P4Simulator } from './webview';
 import * as vscode from 'vscode';
 import { P4HoverProvider } from './hover';
@@ -22,6 +23,14 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.languages.registerDocumentSymbolProvider('p4', new P4SymbolProvider())
   );
 
+  // Setup linter (diagnostics implementation)
+  let diagnosticsProvider = new P4DiagnosticsProvider(
+    vscode.languages.createDiagnosticCollection('p4')
+  );
+  context.subscriptions.push(diagnosticsProvider.diagnosticCollection);
+
+  diagnosticsProvider.subscribeToDocumentChanges(context);
+
   //assemble and simulate commands
   let outputChannel = vscode.window.createOutputChannel('P4');
 
@@ -40,6 +49,7 @@ export function deactivate() {}
 
 export class ExtensionState {
   private documentationManager: P4DocumentationManager | undefined;
+  private diagnosticsProvider: P4DiagnosticsProvider | undefined;
   private extensionPath: string = path.join(__dirname, '..');
 
   public getDocumentationManager(): Promise<P4DocumentationManager> {
@@ -54,6 +64,14 @@ export class ExtensionState {
 
   public setExtensionPath(extensionPath: string) {
     this.extensionPath = extensionPath;
+  }
+
+  public setDiagnosticsProvider(diagnosticsProvider: P4DiagnosticsProvider) {
+    this.diagnosticsProvider = diagnosticsProvider;
+  }
+
+  public getDiagnosticsProvider(): P4DiagnosticsProvider | undefined {
+    return this.diagnosticsProvider;
   }
 }
 
