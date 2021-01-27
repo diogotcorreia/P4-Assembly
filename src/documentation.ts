@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { P3Line, P3Document, P3LineType } from './parser';
+import { P4Line, P4Document, P4LineType } from './parser';
 
-export class P3DocumentationManager {
-  instructions = new Map<string, P3DocumentationInstruction>();
-  registers = new Map<string, P3DocumentationRegister>();
+export class P4DocumentationManager {
+  instructions = new Map<string, P4DocumentationInstruction>();
+  registers = new Map<string, P4DocumentationRegister>();
   private extensionPath: string;
 
   constructor(extensionPath: string) {
@@ -21,7 +21,7 @@ export class P3DocumentationManager {
       for (let line of lines) {
         if (line.length > 0)
           try {
-            let inst = new P3DocumentationInstruction(line);
+            let inst = new P4DocumentationInstruction(line);
             this.instructions.set(inst.name, inst);
           } catch (err) {
             console.error(
@@ -39,7 +39,7 @@ export class P3DocumentationManager {
       for (let line of lines) {
         if (line.length > 0)
           try {
-            let reg = new P3DocumentationRegister(line);
+            let reg = new P4DocumentationRegister(line);
             for (var alias of reg.alias) this.registers.set(alias, reg);
             this.registers.set(reg.name, reg);
           } catch (err) {
@@ -63,21 +63,21 @@ export class P3DocumentationManager {
   ) {
     return new Promise<vscode.Position>((resolve) => {
       let line = document.lineAt(position.line);
-      let p3Line = new P3Line(line.text, line);
+      let p4Line = new P4Line(line.text, line);
       let word = document.getText(document.getWordRangeAtPosition(position)).trim();
       //if this is inside quotes, we have to ignore it
-      if (p3Line.findOpeningQuote(position) >= 0) resolve();
+      if (p4Line.findOpeningQuote(position) >= 0) resolve();
       //we do not want to show label info on the actual label definition
-      if (p3Line.lineType !== P3LineType.LABEL || !p3Line.labelRange.contains(position)) {
-        let p3Document = new P3Document(document, token);
-        let label = p3Document.p3Labels.get(word);
+      if (p4Line.lineType !== P4LineType.LABEL || !p4Line.labelRange.contains(position)) {
+        let p4Document = new P4Document(document, token);
+        let label = p4Document.p4Labels.get(word);
         if (label)
           resolve(label.instructionRange ? label.instructionRange.start : label.labelRange.end);
       }
       //we do not want to show label info on the actual variable definition
-      if (p3Line.lineType !== P3LineType.ASSIGNMENT || !p3Line.variableRange.contains(position)) {
-        let p3Document = new P3Document(document, token);
-        let variable = p3Document.p3Assignments.get(word);
+      if (p4Line.lineType !== P4LineType.ASSIGNMENT || !p4Line.variableRange.contains(position)) {
+        let p4Document = new P4Document(document, token);
+        let variable = p4Document.p4Assignments.get(word);
         if (variable) resolve(variable.valueRange.start);
       }
       resolve();
@@ -85,7 +85,7 @@ export class P3DocumentationManager {
   }
 }
 
-export class P3DocumentationRegister {
+export class P4DocumentationRegister {
   name: string = '';
   description: string = '';
   alias: string[];
@@ -98,7 +98,7 @@ export class P3DocumentationRegister {
   }
 }
 
-export class P3DocumentationInstruction {
+export class P4DocumentationInstruction {
   static possibleFlags = ['Z', 'C', 'N', 'O', 'E'];
 
   name: string = '';
@@ -113,7 +113,7 @@ export class P3DocumentationInstruction {
     this.format = comps[1];
     this.description = comps[2];
     let flagmask = comps[3].toUpperCase();
-    for (let flag of P3DocumentationInstruction.possibleFlags)
+    for (let flag of P4DocumentationInstruction.possibleFlags)
       if (flagmask.indexOf(flag) >= 0) this.flags += flag;
     this.pseudo = comps[4].toLowerCase() === 'true';
   }

@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
-import { P3DocumentationManager } from './documentation';
+import { P4DocumentationManager } from './documentation';
 
 /**
  * Declaration provider class
  */
-export class P3DefinitionProvider implements vscode.DefinitionProvider {
-  documentationManager: P3DocumentationManager;
+export class P4DefinitionProvider implements vscode.DefinitionProvider {
+  documentationManager: P4DocumentationManager;
 
-  constructor(documentationManager: P3DocumentationManager) {
+  constructor(documentationManager: P4DocumentationManager) {
     this.documentationManager = documentationManager;
   }
 

@@ -1,18 +1,18 @@
 import * as vscode from 'vscode';
 import {
-  P3DocumentationManager,
-  P3DocumentationInstruction,
-  P3DocumentationRegister,
+  P4DocumentationManager,
+  P4DocumentationInstruction,
+  P4DocumentationRegister,
 } from './documentation';
-import { P3Line } from './parser';
+import { P4Line } from './parser';
 
 /**
  * Hover provider class
  */
-export class P3HoverProvider implements vscode.HoverProvider {
-  documentationManager: P3DocumentationManager;
+export class P4HoverProvider implements vscode.HoverProvider {
+  documentationManager: P4DocumentationManager;
 
-  constructor(documentationManager: P3DocumentationManager) {
+  constructor(documentationManager: P4DocumentationManager) {
     this.documentationManager = documentationManager;
   }
 
@@ -31,7 +31,7 @@ export class P3HoverProvider implements vscode.HoverProvider {
     return new Promise((resolve) => {
       this.documentationManager.findDefinition(document, position, token).then((defPosition) => {
         let line = document.lineAt(position.line);
-        let p3Line = new P3Line(line.text, line);
+        let p4Line = new P4Line(line.text, line);
         if (token.isCancellationRequested) resolve();
 
         // start by looking for an actual definition (variable/label)
@@ -46,17 +46,17 @@ export class P3HoverProvider implements vscode.HoverProvider {
         // extract operand from instruction or assignment
         let op;
         if (
-          p3Line.instructionRange &&
-          p3Line.instructionRange.contains(position) &&
-          p3Line.instruction.length > 0
+          p4Line.instructionRange &&
+          p4Line.instructionRange.contains(position) &&
+          p4Line.instruction.length > 0
         )
-          op = p3Line.instruction;
+          op = p4Line.instruction;
         else if (
-          p3Line.operatorRange &&
-          p3Line.operatorRange.contains(position) &&
-          p3Line.operator.length > 0
+          p4Line.operatorRange &&
+          p4Line.operatorRange.contains(position) &&
+          p4Line.operator.length > 0
         )
-          op = p3Line.operator;
+          op = p4Line.operator;
 
         if (op) {
           //remove jump conditions
@@ -67,15 +67,15 @@ export class P3HoverProvider implements vscode.HoverProvider {
         }
 
         // registers and constants
-        if (p3Line.dataRange && p3Line.dataRange.contains(position)) {
-          let registers = p3Line.getRegistersFromData();
+        if (p4Line.dataRange && p4Line.dataRange.contains(position)) {
+          let registers = p4Line.getRegistersFromData();
           for (var reg of registers) {
             let register = this.documentationManager.registers.get(reg[0]);
             if (reg[1] && reg[1].contains(position) && register)
               resolve(new vscode.Hover(this.renderRegister(register)));
           }
           this.parseConstant(document, position, resolve);
-        } else if (p3Line.valueRange && p3Line.valueRange.contains(position))
+        } else if (p4Line.valueRange && p4Line.valueRange.contains(position))
           this.parseConstant(document, position, resolve);
         resolve();
       });
@@ -90,9 +90,9 @@ export class P3HoverProvider implements vscode.HoverProvider {
     let values = new Array<number>();
 
     let line = document.lineAt(position.line);
-    let p3Line = new P3Line(line.text, line);
+    let p4Line = new P4Line(line.text, line);
 
-    let openQuote = p3Line.findOpeningQuote(position);
+    let openQuote = p4Line.findOpeningQuote(position);
 
     //if in quotes
     if (openQuote >= 0) {
@@ -151,7 +151,7 @@ export class P3HoverProvider implements vscode.HoverProvider {
     return rendered;
   }
 
-  public renderRegister(reg: P3DocumentationRegister): Array<vscode.MarkdownString> {
+  public renderRegister(reg: P4DocumentationRegister): Array<vscode.MarkdownString> {
     let rendered = new Array<vscode.MarkdownString>();
     rendered.push(
       new vscode.MarkdownString(
@@ -165,7 +165,7 @@ export class P3HoverProvider implements vscode.HoverProvider {
     return rendered;
   }
 
-  public renderInstruction(inst: P3DocumentationInstruction): Array<vscode.MarkdownString> {
+  public renderInstruction(inst: P4DocumentationInstruction): Array<vscode.MarkdownString> {
     let rendered = new Array<vscode.MarkdownString>();
     let top =
       '**' +

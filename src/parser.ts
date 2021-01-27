@@ -1,6 +1,6 @@
 import { Position, Range, TextLine, TextDocument, CancellationToken } from 'vscode';
 
-export enum P3LineType {
+export enum P4LineType {
   ASSIGNMENT, // Line containing an assignment with or without comment
   //  variable operator value
   INSTRUCTION, // Line containing with or without comment and data
@@ -58,7 +58,7 @@ export const operators = [
   'XOR',
 ];
 
-export class P3Line {
+export class P4Line {
   static keywordsRegExps?: Array<RegExp>;
   label: string = '';
   instruction: string = '';
@@ -81,7 +81,7 @@ export class P3Line {
   variableRange: Range;
   operatorRange: Range;
   valueRange: Range;
-  lineType: P3LineType;
+  lineType: P4LineType;
   jumpInstruction: boolean = false;
 
   vscodeTextLine: TextLine;
@@ -92,7 +92,7 @@ export class P3Line {
    * @param vscodeTextLine Line for vscode
    */
   constructor(line: string, vscodeTextLine: TextLine) {
-    this.lineType = P3LineType.OTHER;
+    this.lineType = P4LineType.OTHER;
     this.raw = line;
     this.vscodeTextLine = vscodeTextLine;
     let lineNumber = vscodeTextLine.lineNumber;
@@ -121,9 +121,9 @@ export class P3Line {
     this.variableRange = new Range(new Position(lineNumber, 0), new Position(lineNumber, 0));
     this.operatorRange = new Range(new Position(lineNumber, 0), new Position(lineNumber, 0));
     this.valueRange = new Range(new Position(lineNumber, 0), new Position(lineNumber, 0));
-    if (!P3Line.keywordsRegExps?.length) {
-      P3Line.keywordsRegExps = new Array<RegExp>();
-      for (let op of operators) P3Line.keywordsRegExps.push(new RegExp(op));
+    if (!P4Line.keywordsRegExps?.length) {
+      P4Line.keywordsRegExps = new Array<RegExp>();
+      for (let op of operators) P4Line.keywordsRegExps.push(new RegExp(op));
     }
     this.parse(line, lineNumber);
   }
@@ -151,7 +151,7 @@ export class P3Line {
         new Position(lineNumber, leadingSpacesCount),
         new Position(lineNumber, leadingSpacesCount + l.length)
       );
-      this.lineType = P3LineType.COMMENT;
+      this.lineType = P4LineType.COMMENT;
     } else {
       // Extract comments
       let searchAssignmentString = line;
@@ -176,7 +176,7 @@ export class P3Line {
       }
       // Find if it is an assignment
       if (this.parseAssignment(searchAssignmentString, lineNumber)) {
-        this.lineType = P3LineType.ASSIGNMENT;
+        this.lineType = P4LineType.ASSIGNMENT;
         return;
       }
       // find a keyword
@@ -198,13 +198,13 @@ export class P3Line {
       if (qPos > 0) searchInstructionString = searchInstructionString.substring(0, qPos);
 
       let keyword: RegExpExecArray | null = null;
-      if (P3Line.keywordsRegExps)
-        keyword = this.search(P3Line.keywordsRegExps, searchInstructionString);
+      if (P4Line.keywordsRegExps)
+        keyword = this.search(P4Line.keywordsRegExps, searchInstructionString);
 
       if (keyword) {
         // A keyword has been found
         // set the keyword
-        this.lineType = P3LineType.INSTRUCTION;
+        this.lineType = P4LineType.INSTRUCTION;
         this.instruction = keyword[0];
         if (['CALL', 'JMP', 'BR'].includes(this.instruction)) this.jumpInstruction = true;
 
@@ -245,7 +245,7 @@ export class P3Line {
           labelEnd > leadingSpacesCount &&
           (labelEnd < commentPosInInputLine || commentPosInInputLine < 0)
         ) {
-          this.lineType = P3LineType.LABEL;
+          this.lineType = P4LineType.LABEL;
           this.label = l.substr(0, l.indexOf(':'));
           this.labelRange = new Range(
             new Position(lineNumber, leadingSpacesCount),
@@ -367,14 +367,14 @@ export class P3Line {
   }
 }
 
-export class P3Document {
+export class P4Document {
   private document: TextDocument;
   private token: CancellationToken | undefined;
   private range: Range | undefined;
 
-  public p3LinesArray = new Array<P3Line>();
-  public p3Labels = new Map<string, P3Line>();
-  public p3Assignments = new Map<string, P3Line>();
+  public p4LinesArray = new Array<P4Line>();
+  public p4Labels = new Map<string, P4Line>();
+  public p4Assignments = new Map<string, P4Line>();
 
   constructor(document: TextDocument, token?: CancellationToken, range?: Range) {
     this.document = document;
@@ -394,11 +394,11 @@ export class P3Document {
       if (this.token && this.token.isCancellationRequested) return;
 
       const line = this.document.lineAt(i);
-      let p3Line = new P3Line(line.text, line);
-      this.p3LinesArray.push(p3Line);
-      if (p3Line.lineType === P3LineType.LABEL) this.p3Labels.set(p3Line.label, p3Line);
-      else if (p3Line.lineType === P3LineType.ASSIGNMENT)
-        this.p3Assignments.set(p3Line.variable, p3Line);
+      let p4Line = new P4Line(line.text, line);
+      this.p4LinesArray.push(p4Line);
+      if (p4Line.lineType === P4LineType.LABEL) this.p4Labels.set(p4Line.label, p4Line);
+      else if (p4Line.lineType === P4LineType.ASSIGNMENT)
+        this.p4Assignments.set(p4Line.variable, p4Line);
     }
   }
 }
