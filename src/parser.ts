@@ -14,33 +14,30 @@ export enum P4LineType {
 
 export const operators = [
   'ORIG',
+  'OPT',
   'ADD',
   'ADDC',
   'AND',
   'BR',
-  'CALL',
   'CLC',
   'CMC',
   'CMP',
   'COM',
   'DEC',
-  'DIV',
   'DSI',
   'ENI',
   'INC',
   'INT',
+  'JAL',
   'JMP',
+  'LOAD',
   'MOV',
-  'MUL',
-  'MVBH',
-  'MVBL',
+  'MVI',
+  'MVIH',
+  'MVIL',
   'NEG',
   'NOP',
   'OR',
-  'POP',
-  'PUSH',
-  'RET',
-  'RETN',
   'ROL',
   'ROLC',
   'ROR',
@@ -51,10 +48,10 @@ export const operators = [
   'SHR',
   'SHRA',
   'STC',
+  'STOR',
   'SUB',
   'SUBB',
   'TEST',
-  'XCH',
   'XOR',
 ];
 
@@ -67,6 +64,7 @@ export class P4Line {
   raw = '';
   start: Position;
   end: Position;
+  lineNumber = -1;
   variable = '';
   operator = '';
   value = '';
@@ -95,7 +93,8 @@ export class P4Line {
     this.lineType = P4LineType.OTHER;
     this.raw = line;
     this.vscodeTextLine = vscodeTextLine;
-    const lineNumber = vscodeTextLine.lineNumber;
+    this.lineNumber = vscodeTextLine.lineNumber;
+    const lineNumber = this.lineNumber;
     this.start = new Position(lineNumber, 0);
     this.end = new Position(lineNumber, line.length);
     this.spacesBeforeLabelRange = new Range(
@@ -123,17 +122,17 @@ export class P4Line {
     this.valueRange = new Range(new Position(lineNumber, 0), new Position(lineNumber, 0));
     if (!P4Line.keywordsRegExps?.length) {
       P4Line.keywordsRegExps = new Array<RegExp>();
-      for (const op of operators) P4Line.keywordsRegExps.push(new RegExp(op));
+      for (const op of operators) P4Line.keywordsRegExps.push(new RegExp(`(?<!\\S)${op}(?!\\S)`));
     }
-    this.parse(line, lineNumber);
+    this.parse(line);
   }
 
   /**
    * Parse a line
    * @param line Line to parse
-   * @param lineNumber index of the line in document
    */
-  parse(line: string, lineNumber: number): void {
+  parse(line: string): void {
+    const lineNumber = this.lineNumber;
     let l = line.trim();
     let leadingSpacesCount = line.search(/\S/);
     let current = new Position(lineNumber, 0);
@@ -238,20 +237,19 @@ export class P4Line {
         }
         if (this.comment.length > 0)
           this.spacesDataToCommentRange = new Range(current, this.commentRange.start);
-
-        //label check (contains : in > 0 position and is not a comment)
-        const labelEnd = line.indexOf(':');
-        if (
-          labelEnd > leadingSpacesCount &&
-          (labelEnd < commentPosInInputLine || commentPosInInputLine < 0)
-        ) {
-          this.lineType = P4LineType.LABEL;
-          this.label = l.substr(0, l.indexOf(':'));
-          this.labelRange = new Range(
-            new Position(lineNumber, leadingSpacesCount),
-            new Position(lineNumber, leadingSpacesCount + this.label.length)
-          );
-        }
+      }
+      //label check (contains : in > 0 position and is not a comment)
+      const labelEnd = line.indexOf(':');
+      if (
+        labelEnd > leadingSpacesCount &&
+        (labelEnd < commentPosInInputLine || commentPosInInputLine < 0)
+      ) {
+        this.lineType = P4LineType.LABEL;
+        this.label = l.substr(0, l.indexOf(':'));
+        this.labelRange = new Range(
+          new Position(lineNumber, leadingSpacesCount),
+          new Position(lineNumber, leadingSpacesCount + this.label.length)
+        );
       }
     }
   }

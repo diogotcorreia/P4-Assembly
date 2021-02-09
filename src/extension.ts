@@ -1,3 +1,4 @@
+import { P4Formatter } from './formatter';
 import { P4DiagnosticsProvider } from './diagnostics';
 import { P4Simulator } from './webview';
 import * as vscode from 'vscode';
@@ -21,6 +22,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   context.subscriptions.push(
     vscode.languages.registerDocumentSymbolProvider('p4', new P4SymbolProvider())
+  );
+
+  context.subscriptions.push(
+    vscode.languages.registerDocumentFormattingEditProvider('p4', new P4Formatter())
   );
 
   // Setup linter (diagnostics implementation)
