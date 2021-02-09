@@ -6,9 +6,8 @@
     "sourceType": "module"
   },
   "plugins": ["@typescript-eslint"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "rules": {
-    "@typescript-eslint/class-name-casing": "warn",
-    "@typescript-eslint/semi": "warn",
     "eqeqeq": "warn",
     "no-throw-literal": "warn",
     "indent": ["error", 2, { "SwitchCase": 1 }],

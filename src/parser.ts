@@ -60,16 +60,16 @@ export const operators = [
 
 export class P4Line {
   static keywordsRegExps?: Array<RegExp>;
-  label: string = '';
-  instruction: string = '';
-  data: string = '';
-  comment: string = '';
-  raw: string = '';
+  label = '';
+  instruction = '';
+  data = '';
+  comment = '';
+  raw = '';
   start: Position;
   end: Position;
-  variable: string = '';
-  operator: string = '';
-  value: string = '';
+  variable = '';
+  operator = '';
+  value = '';
   spacesBeforeLabelRange: Range;
   labelRange: Range;
   spacesLabelToInstructionRange: Range;
@@ -82,7 +82,7 @@ export class P4Line {
   operatorRange: Range;
   valueRange: Range;
   lineType: P4LineType;
-  jumpInstruction: boolean = false;
+  jumpInstruction = false;
 
   vscodeTextLine: TextLine;
 
@@ -95,7 +95,7 @@ export class P4Line {
     this.lineType = P4LineType.OTHER;
     this.raw = line;
     this.vscodeTextLine = vscodeTextLine;
-    let lineNumber = vscodeTextLine.lineNumber;
+    const lineNumber = vscodeTextLine.lineNumber;
     this.start = new Position(lineNumber, 0);
     this.end = new Position(lineNumber, line.length);
     this.spacesBeforeLabelRange = new Range(
@@ -123,7 +123,7 @@ export class P4Line {
     this.valueRange = new Range(new Position(lineNumber, 0), new Position(lineNumber, 0));
     if (!P4Line.keywordsRegExps?.length) {
       P4Line.keywordsRegExps = new Array<RegExp>();
-      for (let op of operators) P4Line.keywordsRegExps.push(new RegExp(op));
+      for (const op of operators) P4Line.keywordsRegExps.push(new RegExp(op));
     }
     this.parse(line, lineNumber);
   }
@@ -133,7 +133,7 @@ export class P4Line {
    * @param line Line to parse
    * @param lineNumber index of the line in document
    */
-  parse(line: string, lineNumber: number) {
+  parse(line: string, lineNumber: number): void {
     let l = line.trim();
     let leadingSpacesCount = line.search(/\S/);
     let current = new Position(lineNumber, 0);
@@ -158,7 +158,7 @@ export class P4Line {
       let inQuotes = false;
       let commentPosInInputLine = -1;
       for (let i = 0; i < line.length; i++) {
-        let c = line.charAt(i);
+        const c = line.charAt(i);
         if (c === "'") inQuotes = !inQuotes;
         else if (!inQuotes && c === ';') {
           commentPosInInputLine = i;
@@ -185,7 +185,7 @@ export class P4Line {
       let keywordIndex = 0;
       if (leadingSpacesCount === 0) {
         // Fist word must be a label
-        let sPos = line.search(/\s/);
+        const sPos = line.search(/\s/);
         if (sPos > 0) {
           searchInstructionString = searchInstructionString.substring(sPos);
           keywordIndex = sPos;
@@ -210,7 +210,7 @@ export class P4Line {
 
         keywordIndex += keyword.index;
         let startInInputLine = leadingSpacesCount + keywordIndex;
-        let endInInputLine = startInInputLine + this.instruction.length;
+        const endInInputLine = startInInputLine + this.instruction.length;
         this.instructionRange = new Range(
           new Position(lineNumber, startInInputLine),
           new Position(lineNumber, endInInputLine)
@@ -224,8 +224,8 @@ export class P4Line {
           this.spacesLabelToInstructionRange = new Range(current, next);
         }
         current = this.instructionRange.end;
-        let endInTrimLine = keywordIndex + keyword[0].length;
-        let dataStr = l.substring(endInTrimLine);
+        const endInTrimLine = keywordIndex + keyword[0].length;
+        const dataStr = l.substring(endInTrimLine);
         this.data = dataStr.trim();
         if (this.data.length > 0) {
           startInInputLine = this.instructionRange.end.character + dataStr.indexOf(this.data);
@@ -240,7 +240,7 @@ export class P4Line {
           this.spacesDataToCommentRange = new Range(current, this.commentRange.start);
 
         //label check (contains : in > 0 position and is not a comment)
-        let labelEnd = line.indexOf(':');
+        const labelEnd = line.indexOf(':');
         if (
           labelEnd > leadingSpacesCount &&
           (labelEnd < commentPosInInputLine || commentPosInInputLine < 0)
@@ -263,7 +263,7 @@ export class P4Line {
    * @return True if it as been found
    */
   test(regexps: Array<RegExp>, value: string): boolean {
-    for (let regexp of regexps) if (regexp.test(value)) return true;
+    for (const regexp of regexps) if (regexp.test(value)) return true;
     return false;
   }
 
@@ -274,9 +274,9 @@ export class P4Line {
    * @return RegExpExecArray if found or null
    */
   search(regexps: Array<RegExp>, value: string): RegExpExecArray | null {
-    let firstMatch: any | null = null;
-    for (let regexp of regexps) {
-      let r = regexp.exec(value);
+    let firstMatch: RegExpExecArray | null = null;
+    for (const regexp of regexps) {
+      const r = regexp.exec(value);
       if (r)
         if (firstMatch !== null) {
           // Which one is the first in the line
@@ -291,8 +291,8 @@ export class P4Line {
    * @return true if it is an assignment
    */
   public parseAssignment(line: string, lineNumber: number): boolean {
-    let regexp = /(.*)(EQU|WORD|STR|TAB)(\s+)/gi;
-    let match = regexp.exec(line);
+    const regexp = /(.*)(EQU|WORD|STR|TAB)(\s+)/gi;
+    const match = regexp.exec(line);
     if (match !== null) {
       this.variable = match[1].trim();
       this.operator = match[2].trim();
@@ -301,14 +301,14 @@ export class P4Line {
         new Position(lineNumber, 0),
         new Position(lineNumber, this.variable.length)
       );
-      let startPosOperator = line.indexOf(this.operator);
-      let endPosOperator = startPosOperator + this.operator.length;
+      const startPosOperator = line.indexOf(this.operator);
+      const endPosOperator = startPosOperator + this.operator.length;
       this.operatorRange = new Range(
         new Position(lineNumber, startPosOperator),
         new Position(lineNumber, endPosOperator)
       );
-      let startPosValue = endPosOperator + line.substring(endPosOperator).indexOf(this.value);
-      let endPosValue = startPosValue + this.value.length;
+      const startPosValue = endPosOperator + line.substring(endPosOperator).indexOf(this.value);
+      const endPosValue = startPosValue + this.value.length;
       this.valueRange = new Range(
         new Position(lineNumber, startPosValue),
         new Position(lineNumber, endPosValue)
@@ -335,14 +335,14 @@ export class P4Line {
    * @return a list of registers found
    */
   public getRegistersFromData(): Array<[string, Range]> {
-    let registers = new Array<[string, Range]>();
+    const registers = new Array<[string, Range]>();
     if (this.data.length > 0) {
-      let reg = /(PC|SP|RE|R[0-7]|R1[1-5])/gi;
+      const reg = /(PC|SP|RE|R[0-7]|R1[1-5])/gi;
       let match;
       while ((match = reg.exec(this.data))) {
-        let register = match[1];
-        let startPos = this.dataRange.start.character + match.index;
-        let range = new Range(
+        const register = match[1];
+        const startPos = this.dataRange.start.character + match.index;
+        const range = new Range(
           new Position(this.dataRange.start.line, startPos),
           new Position(this.dataRange.end.line, startPos + register.length)
         );
@@ -356,7 +356,7 @@ export class P4Line {
     let inQuotes = false;
     let openQuote = 0;
     for (let i = 0; i < position.character; i++) {
-      let c = this.raw.charAt(i);
+      const c = this.raw.charAt(i);
       if (c === "'") {
         inQuotes = !inQuotes;
         openQuote = i;
@@ -383,7 +383,7 @@ export class P4Document {
     this.parse();
   }
 
-  public parse() {
+  public parse(): void {
     if (this.document.lineCount <= 0) return;
 
     if (!this.range)
@@ -394,7 +394,7 @@ export class P4Document {
       if (this.token && this.token.isCancellationRequested) return;
 
       const line = this.document.lineAt(i);
-      let p4Line = new P4Line(line.text, line);
+      const p4Line = new P4Line(line.text, line);
       this.p4LinesArray.push(p4Line);
       if (p4Line.lineType === P4LineType.LABEL) this.p4Labels.set(p4Line.label, p4Line);
       else if (p4Line.lineType === P4LineType.ASSIGNMENT)

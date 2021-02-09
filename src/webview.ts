@@ -62,19 +62,17 @@ export class P4Simulator {
     });
   }
 
-  private static getActiveFile(): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      if (vscode.window.activeTextEditor) {
-        let currentFile = vscode.window.activeTextEditor.document.fileName;
-        if (currentFile.endsWith('.as')) {
-          P4Simulator.asFilePath = currentFile;
-          resolve(currentFile);
-        } else resolve(P4Simulator.asFilePath);
-      } else {
-        vscode.window.showWarningMessage('Nenhum ficheiro .as ativo');
-        reject();
-      }
-    });
+  private static async getActiveFile(): Promise<string | undefined> {
+    if (vscode.window.activeTextEditor) {
+      const currentFile = vscode.window.activeTextEditor.document.fileName;
+      if (currentFile.endsWith('.as')) {
+        P4Simulator.asFilePath = currentFile;
+        return currentFile;
+      } else return P4Simulator.asFilePath;
+    } else {
+      vscode.window.showWarningMessage('Nenhum ficheiro .as ativo');
+      throw new Error();
+    }
   }
 
   private checkSelectionState(): Promise<void> {

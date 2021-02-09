@@ -7,7 +7,7 @@ import * as path from 'path';
 import { P4DefinitionProvider } from './definition';
 import { P4SymbolProvider } from './symbols';
 
-export async function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
   state.setExtensionPath(context.extensionPath);
 
   await state.getDocumentationManager().then((docManager) => {
@@ -24,7 +24,7 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   // Setup linter (diagnostics implementation)
-  let diagnosticsProvider = new P4DiagnosticsProvider(
+  const diagnosticsProvider = new P4DiagnosticsProvider(
     vscode.languages.createDiagnosticCollection('p4')
   );
   context.subscriptions.push(diagnosticsProvider.diagnosticCollection);
@@ -32,9 +32,9 @@ export async function activate(context: vscode.ExtensionContext) {
   diagnosticsProvider.subscribeToDocumentChanges(context);
 
   //assemble and simulate commands
-  let outputChannel = vscode.window.createOutputChannel('P4');
+  const outputChannel = vscode.window.createOutputChannel('P4');
 
-  let simulator = new P4Simulator(context, outputChannel);
+  const simulator = new P4Simulator(context, outputChannel);
 
   context.subscriptions.push(
     vscode.commands.registerCommand('extension.setSimulator', () => simulator.select())
@@ -45,28 +45,24 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 }
 
-export function deactivate() {}
-
 export class ExtensionState {
   private documentationManager: P4DocumentationManager | undefined;
   private diagnosticsProvider: P4DiagnosticsProvider | undefined;
   private extensionPath: string = path.join(__dirname, '..');
 
-  public getDocumentationManager(): Promise<P4DocumentationManager> {
-    return new Promise(async (resolve, _reject) => {
-      if (this.documentationManager === undefined) {
-        this.documentationManager = new P4DocumentationManager(this.extensionPath);
-        await this.documentationManager.load();
-      }
-      resolve(this.documentationManager);
-    });
+  public async getDocumentationManager(): Promise<P4DocumentationManager> {
+    if (this.documentationManager === undefined) {
+      this.documentationManager = new P4DocumentationManager(this.extensionPath);
+      await this.documentationManager.load();
+    }
+    return this.documentationManager;
   }
 
-  public setExtensionPath(extensionPath: string) {
+  public setExtensionPath(extensionPath: string): void {
     this.extensionPath = extensionPath;
   }
 
-  public setDiagnosticsProvider(diagnosticsProvider: P4DiagnosticsProvider) {
+  public setDiagnosticsProvider(diagnosticsProvider: P4DiagnosticsProvider): void {
     this.diagnosticsProvider = diagnosticsProvider;
   }
 

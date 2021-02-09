@@ -19,7 +19,7 @@ export class P4DefinitionProvider implements vscode.DefinitionProvider {
     return new Promise((resolve) => {
       this.documentationManager.findDefinition(document, position, token).then((position) => {
         if (position) resolve(new vscode.Location(document.uri, position));
-        resolve();
+        resolve(null);
       });
     });
   }

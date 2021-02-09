@@ -10,10 +10,10 @@ export class P4SymbolProvider implements vscode.DocumentSymbolProvider {
     token: vscode.CancellationToken
   ): vscode.ProviderResult<vscode.SymbolInformation[] | vscode.DocumentSymbol[]> {
     return new Promise((resolve) => {
-      let p4Document = new P4Document(document, token);
-      if (token.isCancellationRequested) resolve();
-      let symbols = new Array<vscode.DocumentSymbol>();
-      for (let [name, ass] of p4Document.p4Assignments.entries()) {
+      const p4Document = new P4Document(document, token);
+      if (token.isCancellationRequested) resolve(null);
+      const symbols = new Array<vscode.DocumentSymbol>();
+      for (const [name, ass] of p4Document.p4Assignments.entries()) {
         let kind;
         switch (ass.operator) {
           case 'EQU':
@@ -30,7 +30,7 @@ export class P4SymbolProvider implements vscode.DocumentSymbolProvider {
           new vscode.DocumentSymbol(name, '', kind, ass.vscodeTextLine.range, ass.valueRange)
         );
       }
-      for (let [name, label] of p4Document.p4Labels.entries())
+      for (const [name, label] of p4Document.p4Labels.entries())
         symbols.push(
           new vscode.DocumentSymbol(
             name,
