@@ -1,13 +1,7 @@
 import * as vscode from 'vscode';
 import assembler from './p4/assembler';
 
-/** Code that is used to associate diagnostic entries with code actions. */
-export const EMOJI_MENTION = 'emoji_mention';
-
-/** String to detect in the text document. */
-const EMOJI = 'emoji';
-
-const severity: any = {
+const severity = {
   error: vscode.DiagnosticSeverity.Error,
   warning: vscode.DiagnosticSeverity.Warning,
 };
@@ -17,7 +11,7 @@ type Error = {
   from: number;
   to: number;
   message: string;
-  severity: string | undefined;
+  severity: 'error' | 'warning' | undefined;
 };
 
 export class P4DiagnosticsProvider {
@@ -32,9 +26,8 @@ export class P4DiagnosticsProvider {
 
     const diagnostics: vscode.Diagnostic[] = [];
 
-    const assemblerResult = assembler.parse(doc.getText());
+    const assemblerResult = assembler.assemble(doc.getText());
 
-    // eslint-disable-next-line no-console
     const errors = assemblerResult.errors;
 
     diagnostics.push(...errors.map((error) => this.createDiagnostic(doc, error)));
